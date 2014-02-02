@@ -19,13 +19,13 @@ type StringTableTester struct {
 func (stt StringTableTester) RunAgainst(ti interface{}, t *testing.T) bool {
     field := reflect.ValueOf(ti).FieldByName(stt.Field)
     if field.IsValid() == false {
-        t.Logf("Failed to find field %s\n", stt.Field)
+        t.Logf("Failed to find field \"%s\"\n", stt.Field)
         return false
     }
     actual := field.Interface()
     expected := stt.Value
     if actual != expected {
-        t.Logf("Fail on %s, expected %s, actual %s\n", stt.Field, expected, actual)
+        t.Logf("Fail on %s, expected \"%s\", actual \"%s\"\n", stt.Field, expected, actual)
         return false
     }
     return true
