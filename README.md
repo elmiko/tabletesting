@@ -11,7 +11,7 @@ to TableTester.RunAgainst with the reference value specified. This example
 shows a string based test.
 
     func RunOneTest(t *testing.t) {
-        test := StringTableTester{"SomeStringField", "test data"}
+        test := tabletesting.StringTableTester{"SomeStringField", "test data"}
         actualdata := struct {SomeStringField string}{"test data"}
         if err := test.RunAgainst(actualdata); err != nil {
             t.Errorf("Test failed with error \"%s\"\n", err)
@@ -21,16 +21,16 @@ shows a string based test.
 This example shows how to run multiple tests using the RunSeries function.
 
     func RunMultipleTests(t *testing.t) {
-        testtable := []TableTester{
-            StringTableTester{"SomeStringField", "test data"},
-            StringTableTester{"SomeOtherStringField", "more test data"},
+        testtable := []tabletesting.TableTester{
+            tabletesting.StringTableTester{"SomeStringField", "test data"},
+            tabletesting.StringTableTester{"SomeOtherStringField", "more test data"},
         }
         actualdata := struct {
             SomeStringField string
             SomeOtherStringField string
         }{ "test data", "more test data"}
 
-        if err := RunSeries(testtable, actualdata); err != nil {
+        if err := tabletesting.RunSeries(testtable, actualdata); err != nil {
             t.Errorf("A test has failed with error \"%s\"\n", err)
         }
     }
