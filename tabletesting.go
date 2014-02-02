@@ -11,11 +11,15 @@ type TableTester interface {
     RunAgainst(interface{}, *testing.T) bool
 }
 
+// A TableTester for string based data.
 type StringTableTester struct {
     Field string
     Value string
 }
 
+// Run the TableTester against the supplied data.
+// Looks for a field in the supplied data name Field and compares it's value
+// to Value, logs errors and returns false on failure.
 func (stt StringTableTester) RunAgainst(ti interface{}, t *testing.T) bool {
     field := reflect.ValueOf(ti).FieldByName(stt.Field)
     if field.IsValid() == false {
