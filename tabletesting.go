@@ -3,12 +3,23 @@
 package tabletesting
 
 import (
+    "fmt"
     "reflect"
-    "testing"
 )
 
 type TableTester interface {
-    RunAgainst(interface{}, *testing.T) bool
+    RunAgainst(interface{}) error
+}
+
+// Run a series of testers.
+// Logs errors and returns false on the first failure.
+func RunSeries(testers []TableTester, data interface{}) error {
+    for _, tester := range testers {
+        if err := tester.RunAgainst(data); err != nil {
+            return err
+        }
+    }
+    return nil
 }
 
 // A TableTester for string based data.
@@ -19,18 +30,18 @@ type StringTableTester struct {
 
 // Run the TableTester against the supplied data.
 // Looks for a field in the supplied data name Field and compares it's value
-// to Value, logs errors and returns false on failure.
-func (stt StringTableTester) RunAgainst(ti interface{}, t *testing.T) bool {
+// to Value, returns error or nil.
+func (stt StringTableTester) RunAgainst(ti interface{}) error {
     field := reflect.ValueOf(ti).FieldByName(stt.Field)
     if field.IsValid() == false {
-        t.Logf("Failed to find field \"%s\"\n", stt.Field)
-        return false
+        err := fmt.Errorf("Failed to find field \"%s\"\n", stt.Field)
+        return err
     }
     actual := field.Interface()
     expected := stt.Value
     if actual != expected {
-        t.Logf("Fail on %s, expected \"%s\", actual \"%s\"\n", stt.Field, expected, actual)
-        return false
+        err := fmt.Errorf("Fail on %s, expected \"%s\", actual \"%s\"\n", stt.Field, expected, actual)
+        return err
     }
-    return true
+    return nil
 }
