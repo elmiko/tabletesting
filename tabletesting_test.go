@@ -19,3 +19,11 @@ func TestStringTableTesterRunAgainstFieldFailure(t *testing.T) {
         t.Error("RunAgainst returned true, expected false\n")
     }
 }
+
+func TestStringTableTesterRunAgainstValueFailure(t *testing.T) {
+    tester := StringTableTester{ "Field1", "test value"}
+    testee := struct{Field1 string}{"bad test value"}
+    if tester.RunAgainst(testee, t) == true {
+        t.Error("RunAgainst returned true, expected false\n")
+    }
+}
